@@ -1,19 +1,19 @@
 import requests
 from requests_oauthlib import OAuth1
-from configparser import ConfigParser
+from datamanager import DataManager
 
 
 class API:
     def __init__(self):
-        keyf = 'keys.ini'
-        config = ConfigParser()
-        config.read(keyf)
-        CK, CS, AT, AS = [config['Key'][k] for k in ['CK', 'CS', 'AT', 'AS']]
-
-        self.auth = OAuth1(CK, CS, AT, AS)
+        self.db = DataManager()
+        self.auth = OAuth1(*self.db.get_auth())
         self.url = 'https://api.twitter.com/1.1/statuses/'
 
-        self.last_id = None
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.db.save()
 
     def __post(self, url, params=None):
         if params is None:
@@ -44,12 +44,13 @@ class API:
 
     def get_mentions(self):
         url = self.url + 'mentions_timeline.json'
-        if self.last_id is None:
+        last_id = self.db.get_last_id()
+        if last_id is None:
             mentions = self.__get(url)
         else:
-            params = {'since_id': self.last_id}
+            params = {'since_id': last_id}
             mentions = self.__get(url, params)
 
-        for mention in mentions:
+        for mention in mentions[::-1]:
             yield mention
-            self.last_id = mention['id_str']
+        self.db.set_last_id(mention['id_str'])
