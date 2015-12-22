@@ -1,6 +1,9 @@
 from api import API
+from other_api import OtherAPI
+
 
 with API() as api:
+    utils = OtherAPI()
     # ツイートする
     # api.tweet('tweet test2')
 
@@ -17,4 +20,16 @@ with API() as api:
 
         # リプを返す
         content = ' '.join(text.split()[1:])
+        if content == '天気':
+            wethers = utils.get_wether()
+            content = '\n'
+            for i, day in enumerate(['今日', '明日', '明後日']):
+                content += '{}\n  {}'.format(day, wethers[i]['telop'])
+                maxt = wethers[i]['temperature']['max']
+                mint = wethers[i]['temperature']['min']
+                if maxt is not None:
+                    content += ', 最高気温は{}℃, 最低気温は{}℃\n'.format(
+                        maxt['celsius'], mint['celsius'])
+                else:
+                    content += '\n'
         api.reply(content, tweet_id, screen_name)
