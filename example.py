@@ -6,7 +6,6 @@ with API() as api:
     utils = Utils()
     # ツイートする
     # api.tweet('tweet test2')
-
     # リプを取得
     for mention in api.get_mentions():
         text = mention['text']
@@ -18,18 +17,25 @@ with API() as api:
         location = mention['user']['location']
         description = mention['user']['description']
 
-        # リプを返す
+        # echo
         content = ' '.join(text.split()[1:])
+
+        # weather
         if content == '天気':
+            # jsonの情報の取得
             wethers = utils.get_wether()
-            content = '\n'
-            for i, day in enumerate(['今日', '明日', '明後日']):
-                content += '{}\n  {}'.format(day, wethers[i]['telop'])
-                maxt = wethers[i]['temperature']['max']
-                mint = wethers[i]['temperature']['min']
-                if maxt is not None:
-                    content += ', 最高気温は{}℃, 最低気温は{}℃\n'.format(
-                        maxt['celsius'], mint['celsius'])
-                else:
-                    content += '\n'
+            # 整理
+            tomorrow = 1
+            data = wethers[tomorrow]['date']
+            data = '{}月{}日'.format(data.split('-')[1], data.split('-')[2])
+            telop = wethers[tomorrow]['telop']
+            maxt = wethers[tomorrow]['temperature']['max']
+            mint = wethers[tomorrow]['temperature']['min']
+
+            # テキストの生成
+            content = '明日{}の天気は{}です！\n'.format(data, telop)
+            if maxt is not None:
+                content += '最高気温は{}℃, 最低気温は{}℃です．\n'.format(
+                    maxt['celsius'], mint['celsius'])
+        # リプを返す
         api.reply(content, tweet_id, screen_name)
