@@ -1,9 +1,9 @@
 from api import API
-from other_api import OtherAPI
+from utils import Utils
 
 
 with API() as api:
-    utils = OtherAPI()
+    utils = Utils()
     # ツイートする
     # api.tweet('tweet test2')
 
