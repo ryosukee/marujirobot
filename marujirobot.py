@@ -1,6 +1,6 @@
 """
 Usage:
-    marujirobot.py [--terminal]
+    marujirobot.py [--terminal] [--weather]
 
 Options:
     -h, --help
@@ -9,6 +9,8 @@ Options:
         show version
     --terminal
         run on terminal
+    --weather
+        send weather
 """
 
 
@@ -25,25 +27,29 @@ with API() as api:
     # run on terminal
     if args['--terminal']:
         for line in iter(sys.stdin.readline, '\n'):
-            # jsonの情報の取得
-            wethers = utils.get_wether()
-            # 整理
-            tomorrow = 1
-            data = wethers[tomorrow]['date']
-            data = '{}月{}日'.format(data.split('-')[1], data.split('-')[2])
-            telop = wethers[tomorrow]['telop']
-            maxt = wethers[tomorrow]['temperature']['max']
-            mint = wethers[tomorrow]['temperature']['min']
+            print(line.strip())
+    elif args['--weather']:
+        # jsonの情報の取得
+        wethers = utils.get_wether()
+        # 整理 today
+        day = 0
+        date = wethers[day]['date']
+        date_label = wethers[day]['dateLabel']
+        date = '{}月{}日'.format(date.split('-')[1], date.split('-')[2])
+        telop = wethers[day]['telop']
+        maxt = wethers[day]['temperature']['max']
+        mint = wethers[day]['temperature']['min']
 
-            # テキストの生成
-            content = '明日{}の天気は{}です！\n'.format(data, telop)
-            if maxt is not None:
-                content += '最高気温は{}℃, 最低気温は{}℃です．\n'.format(
-                    maxt['celsius'], mint['celsius'])
-            print(content)
-    else:
+        # テキストの生成
+        content = '{}({})の天気は{}'.format(date_label, date, telop)
+        if maxt is not None:
+            content += ',\n最低気温は{}℃, 最高気温は{}℃です! \n'.format(
+                mint['celsius'], maxt['celsius'])
+        else:
+            content += 'です！\n'
         # ツイートする
-        # api.tweet('tweet test2')
+        api.tweet('@marujiruo {}'.format(content))
+    else:
         # リプを取得
         for mention in api.get_mentions():
             text = mention['text']
