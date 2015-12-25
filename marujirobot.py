@@ -42,11 +42,11 @@ with API() as api:
 
         # テキストの生成
         content = '{}({})の天気は{}'.format(date_label, date, telop)
+        if mint is not None:
+            content += ', \n最低気温は{}℃'.format(mint['celsius'])
         if maxt is not None:
-            content += ',\n最低気温は{}℃, 最高気温は{}℃です! \n'.format(
-                mint['celsius'], maxt['celsius'])
-        else:
-            content += 'です！\n'
+            content += ',\n最高気温は{}℃'.format(maxt['celsius'])
+        content += 'です！\n'
         # ツイートする
         api.tweet('@marujiruo {}'.format(content))
     else:
