@@ -8,7 +8,7 @@ class DialogueAgent:
         self.__utils = Utils()
         self.__twiapi = twiapi
 
-    def get_weather(self, day=0):
+    def weather_text(self, day=0):
         # jsonの情報の取得
         wethers = self.__utils.get_wether()
         # 整理
@@ -34,8 +34,7 @@ class DialogueAgent:
         else:
             self.__twiapi.tweet(text)
 
-    def reply(self):
-        # TODO: list
+    def get_message(self):
         def printkv(item, count=0):
             for k, v in item.items():
                 if isinstance(v, dict):
@@ -46,7 +45,7 @@ class DialogueAgent:
 
         if self.__is_terminal:
             for line in iter(sys.stdin.readline, '\n'):
-                printkv(self.__twiapi.search(line.strip()))
+                yield (line.strip(), None, None)
         else:
             # リプを取得
             for mention in self.__twiapi.get_mentions():
@@ -58,9 +57,12 @@ class DialogueAgent:
                 zone = mention['user']['time_zone']
                 location = mention['user']['location']
                 description = mention['user']['description']
+                yield (' '.join(text.split()[1:]), tweet_id, screen_name)
 
-                # echo
-                content = ' '.join(text.split()[1:])
-
-                # リプを返す
-                self.__twiapi.reply(content, tweet_id, screen_name)
+    def reply(self, message, tweet_id, screen_name):
+        # echo
+        message = message
+        if self.__is_terminal:
+            print(message)
+        else:
+            self.__twiapi.reply(message, tweet_id, screen_name)

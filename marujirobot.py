@@ -25,9 +25,10 @@ with TwitterAPI() as twiapi:
 
     if args['--weather']:
         # weatherの取得
-        text = agent.get_weather()
+        text = agent.weather_text()
         # ツイートする
         agent.speech('@marujiruo {}'.format(text))
     else:
         # 返事をする
-        agent.reply()
+        for message, tweet_id, screen_name in agent.get_message():
+            agent.reply(message, tweet_id, screen_name)
