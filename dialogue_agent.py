@@ -28,9 +28,26 @@ class DialogueAgent:
         content += 'です！\n'
         return content
 
-    def generate_reply(self, text):
-        # echo
-        return text
+    def generate_reply(self, text, method='markov'):
+        if method == 'echo':
+            return text
+        if method == 'markov':
+            # 名詞をseedにする
+            seeds = list()
+            for tok in self.__utils.morph_parse(text):
+                if '名詞' in tok.part_of_speech:
+                    seeds.append(tok.surface)
+            if len(seeds) == 0:
+                seeds.append(text)
+            # seedでツイッター検索をかける
+            sentences = list()
+            # print('query')
+            # print(' OR '.join(seeds))
+            for tweet in self.__twiapi.search(' OR '.join(seeds))["statuses"]:
+                sentences.append(self.__utils.clean_tweet(tweet['text']))
+            # マルコフ連鎖で文を生成
+            gen_sentence = self.__utils.markov_generate(sentences)
+            return gen_sentence
 
     def speech(self, text, tweet_id, screen_name):
         if self.__is_terminal:
@@ -42,14 +59,6 @@ class DialogueAgent:
                 self.__twiapi.tweet(text)
 
     def get_message(self):
-        def printkv(item, count=0):
-            for k, v in item.items():
-                if isinstance(v, dict):
-                    print('{}{}: '.format(' '*count, k))
-                    printkv(v, count + 1)
-                else:
-                    print('{}{}: {}'.format(' '*count, k, v))
-
         if self.__is_terminal:
             for line in iter(sys.stdin.readline, '\n'):
                 yield (line.strip(), None, None)
