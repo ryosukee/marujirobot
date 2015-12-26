@@ -31,4 +31,5 @@ with TwitterAPI() as twiapi:
     else:
         # 返事をする
         for message, tweet_id, screen_name in agent.get_message():
-            agent.reply(message, tweet_id, screen_name)
+            text = agent.generate_reply(message)
+            agent.speech(text, tweet_id, screen_name)

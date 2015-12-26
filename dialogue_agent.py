@@ -28,11 +28,18 @@ class DialogueAgent:
         content += 'です！\n'
         return content
 
-    def speech(self, text):
+    def generate_reply(self, text):
+        # echo
+        return text
+
+    def speech(self, text, tweet_id, screen_name):
         if self.__is_terminal:
             print(text)
         else:
-            self.__twiapi.tweet(text)
+            if tweet_id is not None and screen_name is not None:
+                self.__twiapi.reply(text, tweet_id, screen_name)
+            else:
+                self.__twiapi.tweet(text)
 
     def get_message(self):
         def printkv(item, count=0):
@@ -58,11 +65,3 @@ class DialogueAgent:
                 location = mention['user']['location']
                 description = mention['user']['description']
                 yield (' '.join(text.split()[1:]), tweet_id, screen_name)
-
-    def reply(self, message, tweet_id, screen_name):
-        # echo
-        message = message
-        if self.__is_terminal:
-            print(message)
-        else:
-            self.__twiapi.reply(message, tweet_id, screen_name)
