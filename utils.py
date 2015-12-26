@@ -1,6 +1,7 @@
 import os
 import re
 import random
+import datetime
 import nltk
 from collections import defaultdict
 import requests
@@ -21,6 +22,23 @@ class Utils:
         tokyo = '130010'
         params = {'city': tokyo}
         return requests.get(url, params=params).json()['forecasts']
+
+    def is_today_lang8(self):
+        url = 'http://lang-8.com/1269216/journals'
+        headers = {'Accept-Language': 'ja'}
+        res = requests.get(url, headers=headers)
+        lastday = ''
+        flag = False
+        for line in res.text.split('\n'):
+            if line == "<span class='journal_date floated_on_left'>":
+                flag = True
+                continue
+            if flag:
+                lastday = line.split()[0]
+                break
+        today = datetime.datetime.today()
+        today = '{}年{}月{}日'.format(today.year, today.month, today.day)
+        return lastday == today
 
     def morph_parse(self, text):
         for tok in self.__tokenizer.tokenize(text):

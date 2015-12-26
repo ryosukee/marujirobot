@@ -29,8 +29,10 @@ class DialogueAgent:
         return content
 
     def lang8_text(self):
-        self.__utils.is_today_lang8()
-        return 'hoge'
+        text = ''
+        if not self.__utils.is_today_lang8():
+            text = '今日のlang8がまだ投稿されてないです！'
+        return text
 
     def generate_reply(self, text, method='markov'):
         if method == 'echo':

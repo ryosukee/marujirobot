@@ -1,6 +1,6 @@
 """
 Usage:
-    marujirobot.py [--terminal] [--weather]
+    marujirobot.py [--terminal] [--weather] [--lang8]
 
 Options:
     -h, --help
@@ -11,6 +11,8 @@ Options:
         run on terminal
     --weather
         send weather
+    --lang8
+        check lang8 post
 """
 
 
@@ -28,6 +30,10 @@ with TwitterAPI() as twiapi:
         text = agent.weather_text()
         # ツイートする
         agent.speech('@marujiruo {}'.format(text))
+    elif args['--lang8']:
+        text = agent.lang8_text()
+        if text != '':
+            agent.speech('@marujiruo {}'.format(text))
     else:
         # 返事をする
         for message, tweet_id, screen_name in agent.get_message():
