@@ -10,10 +10,9 @@ from janome.tokenizer import Tokenizer
 
 class Utils:
     def __init__(self):
-        neologd = './mecab-user-dict-seed.20151224.dic'
+        neologd = './mecab-user-dict-seed.20151224'
         if os.path.exists(neologd):
             self.__tokenizer = Tokenizer(neologd)
-            print('neologd')
         else:
             self.__tokenizer = Tokenizer()
 

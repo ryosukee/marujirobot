@@ -49,7 +49,6 @@ class DialogueAgent:
             sentences = list()
             query = ' OR '.join(seeds)
             count = len(seeds) * 20
-            # print('query: ', query)
             for tweet in self.__twiapi.search(query, count=count)["statuses"]:
                 sentences.append(self.__utils.clean_tweet(tweet['text']))
             # マルコフ連鎖で文を生成
