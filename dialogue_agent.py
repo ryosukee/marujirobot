@@ -39,11 +39,12 @@ class DialogueAgent:
                     seeds.append(tok.surface)
             if len(seeds) == 0:
                 seeds.append(text)
-            # seedでツイッター検索をかける
+            # seedをqueryにしてツイッター検索をかける
             sentences = list()
-            # print('query')
-            # print(' OR '.join(seeds))
-            for tweet in self.__twiapi.search(' OR '.join(seeds))["statuses"]:
+            query = ' OR '.join(seeds)
+            count = len(seeds) * 20
+            # print('query: ', query)
+            for tweet in self.__twiapi.search(query, count=count)["statuses"]:
                 sentences.append(self.__utils.clean_tweet(tweet['text']))
             # マルコフ連鎖で文を生成
             gen_sentence = self.__utils.markov_generate(sentences)
