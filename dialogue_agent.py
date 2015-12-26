@@ -28,6 +28,10 @@ class DialogueAgent:
         content += 'です！\n'
         return content
 
+    def lang8_text(self):
+        self.__utils.is_today_lang8()
+        return 'hoge'
+
     def generate_reply(self, text, method='markov'):
         if method == 'echo':
             return text
@@ -50,7 +54,7 @@ class DialogueAgent:
             gen_sentence = self.__utils.markov_generate(sentences)
             return gen_sentence
 
-    def speech(self, text, tweet_id, screen_name):
+    def speech(self, text, tweet_id=None, screen_name=None):
         if self.__is_terminal:
             print(text)
         else:
