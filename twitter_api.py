@@ -54,10 +54,14 @@ class TwitterAPI:
             self.__db.set_last_id(mention['id_str'])
             yield mention
 
-    def search(self, keywards, count=10):
+    def search(self, query, count=10, ignore_rt=True, ignore_bot=True):
+        if ignore_rt:
+            query += ' -rt'
+        if ignore_bot:
+            query += ' -bot'
         url = 'search/tweets.json'
         params = {
-            'q': keywards,
+            'q': query,
             'lang': 'ja',
             'result_type': 'recent',
             'count': count
