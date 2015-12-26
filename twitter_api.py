@@ -3,11 +3,11 @@ from requests_oauthlib import OAuth1
 from datamanager import DataManager as DB
 
 
-class API:
+class TwitterAPI:
     def __init__(self):
         self.__db = DB()
         self.__auth = OAuth1(*self.__db.get_auth())
-        self.__url = 'https://api.twitter.com/1.1/statuses/'
+        self.__url = 'https://api.twitter.com/1.1/'
 
     def __enter__(self):
         return self
@@ -34,18 +34,18 @@ class API:
         return response.json()
 
     def tweet(self, message):
-        url = 'update.json'
+        url = 'statuses/update.json'
         params = {'status': message}
         self.__post(url, params)
 
     def reply(self, message, reply_id, reply_name):
-        url = 'update.json'
+        url = 'statuses/update.json'
         message = '@{} {}'.format(reply_name, message)
         params = {'status': message, 'in_reply_to_status_id': reply_id}
         self.__post(url, params)
 
     def get_mentions(self):
-        url = 'mentions_timeline.json'
+        url = 'statuses/mentions_timeline.json'
         last_id = self.__db.get_last_id()
         params = {'since_id': last_id} if last_id is not None else None
         mentions = self.__get(url, params)
@@ -53,3 +53,13 @@ class API:
         for mention in mentions[::-1]:
             self.__db.set_last_id(mention['id_str'])
             yield mention
+
+    def search(self, keywards, count=10):
+        url = 'search/tweets.json'
+        params = {
+            'q': keywards,
+            'lang': 'ja',
+            'result_type': 'recent',
+            'count': count
+        }
+        return self.__get(url, params)
