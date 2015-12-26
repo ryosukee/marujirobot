@@ -9,7 +9,12 @@ from janome.tokenizer import Tokenizer
 
 class Utils:
     def __init__(self):
-        self.__tokenizer = Tokenizer()
+        neologd = './mecab-user-dict-seed.20151224.dic'
+        if os.path.exists(neologd):
+            self.__tokenizer = Tokenizer(neologd)
+            print('neologd')
+        else:
+            self.__tokenizer = Tokenizer()
 
     def get_wether(self):
         url = 'http://weather.livedoor.com/forecast/webservice/json/v1'
@@ -48,13 +53,14 @@ class Utils:
 
     def clean_tweet(self, text):
         re_rt = re.compile('RT @.*?:')
+        re_rep = re.compile('@.*? ')
         re_url = re.compile('https?://[\w/:%#\$&\?\(\)~\.=\+\-]+')
         # 日本語以外の文字を排除(韓国語とか中国語とかヘブライ語とか)
         # http://qiita.com/haminiku/items/5907cb81325083cb36c7
         jp_chartype_tokenizer = nltk.RegexpTokenizer(
             '([ぁ-んー]+|[ァ-ンー]+|[\u4e00-\u9FFF]+|[ぁ-んァ-ンー\u4e00-\u9FFF]+)')
 
-        for r in [re_rt, re_url]:
+        for r in [re_rt, re_url, re_rep]:
             text = r.sub('', text)
         text = "".join(jp_chartype_tokenizer.tokenize(text))
         return text
