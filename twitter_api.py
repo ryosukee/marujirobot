@@ -4,16 +4,10 @@ from datamanager import DataManager as DB
 
 
 class TwitterAPI:
-    def __init__(self):
-        self.__db = DB()
+    def __init__(self, db):
+        self.__db = db
         self.__auth = OAuth1(*self.__db.get_auth())
         self.__url = 'https://api.twitter.com/1.1/'
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.__db.save()
 
     def __post(self, url, params=None):
         url = self.__url + url

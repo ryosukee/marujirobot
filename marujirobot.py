@@ -17,13 +17,13 @@ Options:
 
 
 from docopt import docopt
-from twitter_api import TwitterAPI
+from datamanager import DataManager
 from dialogue_agent import DialogueAgent
 
 
-with TwitterAPI() as twiapi:
+with DataManager() as db:
     args = docopt(__doc__)
-    agent = DialogueAgent(args['--terminal'], twiapi)
+    agent = DialogueAgent(args['--terminal'], db)
 
     if args['--weather']:
         # 今日のweatherの取得

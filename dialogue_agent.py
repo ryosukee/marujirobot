@@ -1,12 +1,13 @@
 import sys
 from utils import Utils
+from twitter_api import TwitterAPI
 
 
 class DialogueAgent:
-    def __init__(self, is_terminal, twiapi):
+    def __init__(self, is_terminal, db):
         self.__is_terminal = is_terminal
         self.__utils = Utils()
-        self.__twiapi = twiapi
+        self.__twiapi = TwitterAPI(db)
 
     def weather_text(self, day=0):
         # jsonの情報の取得

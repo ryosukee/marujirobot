@@ -17,6 +17,12 @@ class DataManager:
         else:
             self.load()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.save()
+
     def get_auth(self):
         return self.__data['auth']
 
