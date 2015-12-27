@@ -1,6 +1,7 @@
 import os
 import re
 import random
+import json
 import datetime
 import nltk
 from collections import defaultdict
@@ -16,11 +17,19 @@ class Utils:
         else:
             self.__tokenizer = Tokenizer()
 
-    def get_wether(self):
-        url = 'http://weather.livedoor.com/forecast/webservice/json/v1'
-        tokyo = '130010'
-        params = {'city': tokyo}
-        return requests.get(url, params=params).json()['forecasts']
+    def get_wether(self, day):
+        tokyo = 13
+        url = 'http://www.drk7.jp/weather/json/{}.js'.format(tokyo)
+        res = requests.get(url)
+        res.encoding = 'UTF-8'
+        pref = len('drk7jpweather.callback(')
+        suf = len(');')
+        data = json.loads(res.text[pref:-suf])
+        target_day = datetime.datetime.today() + datetime.timedelta(day)
+        target_day = '{}/{}/{}'.format(target_day.year, target_day.month, target_day.day)
+        for weather in data['pref']['area']['東京地方']['info']:
+            if weather['date'] == target_day:
+                return weather
 
     def is_today_lang8(self):
         url = 'http://lang-8.com/1269216/journals'

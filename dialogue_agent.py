@@ -10,23 +10,23 @@ class DialogueAgent:
         self.__twiapi = TwitterAPI(db)
 
     def weather_text(self, day=0):
-        # jsonの情報の取得
-        wethers = self.__utils.get_wether()
-        # 整理
-        date = wethers[day]['date']
-        date_label = wethers[day]['dateLabel']
-        date = '{}月{}日'.format(date.split('-')[1], date.split('-')[2])
-        telop = wethers[day]['telop']
-        maxt = wethers[day]['temperature']['max']
-        mint = wethers[day]['temperature']['min']
+        # jsonの取得
+        weather = self.__utils.get_wether(day)
+        # データの整理
+        date = weather['date'][5:]
+        rainfall = weather['rainfallchance']['period']
+        for temp in weather['temperature']['range']:
+            if temp['centigrade'] == 'max':
+                temp_max = temp['content']  # 11
+            if temp['centigrade'] == 'min':
+                temp_min = temp['content']  # 5
+        telop = weather['weather']
 
         # テキストの生成
-        content = '{}({})の天気は{}'.format(date_label, date, telop)
-        if mint is not None:
-            content += ', \n最低気温は{}℃'.format(mint['celsius'])
-        if maxt is not None:
-            content += ',\n最高気温は{}℃'.format(maxt['celsius'])
-        content += 'です！\n'
+        content = '{}は{}, 最低{}℃, 最高{}℃\n'.format(
+            date, telop, temp_min, temp_max)
+        content += '降水確率は, {} です！'.format(', '.join(
+            '{}:{}%'.format(x['hour'], x['content']) for x in rainfall))
         return content
 
     def lang8_text(self):
