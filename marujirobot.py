@@ -1,6 +1,6 @@
 """
 Usage:
-    marujirobot.py [--terminal] [--weather] [--lang8]
+    marujirobot.py [--terminal] [--weather] [--lang8] [--tweet <text>]
 
 Options:
     -h, --help
@@ -13,6 +13,8 @@ Options:
         send weather
     --lang8
         check lang8 post
+    --tweet <text>
+        tweet
 """
 
 
@@ -37,6 +39,8 @@ with DataManager() as db:
         if text != '':
             # 投稿してなかったらリマインダーツイート
             agent.speech('@marujiruo {}'.format(text), avoid_dupl='！')
+    elif args['--tweet'] is not None:
+        agent.speech(args['--tweet'])
     else:
         # リプライに対して返事をする
         for message, tweet_id, screen_name in agent.get_message():
