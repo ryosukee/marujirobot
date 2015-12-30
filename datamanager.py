@@ -34,7 +34,7 @@ class DataManager:
         self.__data['last_id'] = last_id
 
     def id_duplicate(self, tweet):
-        return self.__data['recent10tweets'] in tweet
+        return tweet in self.__data['recent10tweets']
 
     def add_recent_tweet(self, tweet):
         self.__data['recent10tweets'].append(tweet)
