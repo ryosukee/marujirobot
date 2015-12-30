@@ -36,7 +36,7 @@ with DataManager() as db:
         # textが空なら投稿済み
         if text != '':
             # 投稿してなかったらリマインダーツイート
-            agent.speech('@marujiruo {}'.format(text))
+            agent.speech('@marujiruo {}'.format(text), avoid_dupl='！')
     else:
         # リプライに対して返事をする
         for message, tweet_id, screen_name in agent.get_message():

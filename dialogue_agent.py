@@ -8,6 +8,7 @@ class DialogueAgent:
         self.__is_terminal = is_terminal
         self.__utils = Utils()
         self.__twiapi = TwitterAPI(db)
+        self.__db = db
 
     def weather_text(self, day=0):
         # jsonの取得
@@ -56,14 +57,17 @@ class DialogueAgent:
             gen_sentence = self.__utils.markov_generate(sentences)
             return gen_sentence
 
-    def speech(self, text, tweet_id=None, screen_name=None):
+    def speech(self, text, tweet_id=None, screen_name=None, avoid_dupl='。'):
         if self.__is_terminal:
             print(text)
         else:
             if tweet_id is not None and screen_name is not None:
                 self.__twiapi.reply(text, tweet_id, screen_name)
             else:
+                while self.__db.id_duplicate(text):
+                    text += avoid_dupl
                 self.__twiapi.tweet(text)
+                self.__db.add_recent_tweet(text)
 
     def get_message(self):
         if self.__is_terminal:
