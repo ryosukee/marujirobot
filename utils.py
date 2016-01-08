@@ -49,10 +49,29 @@ class Utils:
         return lastday == today
 
     def get_odai(self):
+        odai = list()
+
         re_hatena = re.compile('今週のお題は「(?P<odai>.*?)」です')
         url = 'http://blog.hatena.ne.jp/-/campaign/odai'
         res = requests.get(url)
-        return re_hatena.search(res.text).group('odai')
+        odai.append(re_hatena.search(res.text).group('odai'))
+
+        re_jugem = re.compile('<a href=.*?>(?P<odai>.*?)</a>')
+        url = 'http://tbm.jugem.jp/'
+        res = requests.get(url)
+        res.encoding = 'EUC-JP'
+        flag = False
+        for line in res.text.split('\n'):
+            if 'alt="お題一覧"' in line:
+                flag = True
+            if flag:
+                if '</ul>' in line:
+                    break
+                m = re_jugem.search(line)
+                if m is not None:
+                    odai.append(m.group('odai'))
+        return '/'.join(odai)
+
 
     def morph_parse(self, text):
         for tok in self.__tokenizer.tokenize(text):
