@@ -48,6 +48,12 @@ class Utils:
         today = '{}年{}月{}日'.format(today.year, today.month, today.day)
         return lastday == today
 
+    def get_odai(self):
+        re_hatena = re.compile('今週のお題は「(?P<odai>.*?)」です')
+        url = 'http://blog.hatena.ne.jp/-/campaign/odai'
+        res = requests.get(url)
+        return re_hatena.search(res.text).group('odai')
+
     def morph_parse(self, text):
         for tok in self.__tokenizer.tokenize(text):
             yield tok

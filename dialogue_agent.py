@@ -37,6 +37,8 @@ class DialogueAgent:
         return text
 
     def generate_reply(self, text, method='markov'):
+        if text == 'お題' or text == 'おだい':
+            return self.__utils.get_odai()
         if method == 'echo':
             return text
         if method == 'markov':
