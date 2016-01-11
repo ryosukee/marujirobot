@@ -26,7 +26,7 @@ class Utils:
         suf = len(');')
         data = json.loads(res.text[pref:-suf])
         target_day = datetime.datetime.today() + datetime.timedelta(day)
-        target_day = '{}/{}/{}'.format(target_day.year, target_day.month, target_day.day)
+        target_day = '{}/{:0>2}/{:0>2}'.format(target_day.year, target_day.month, target_day.day)
         for weather in data['pref']['area']['東京地方']['info']:
             if weather['date'] == target_day:
                 return weather
