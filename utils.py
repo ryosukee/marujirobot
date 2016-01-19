@@ -31,6 +31,37 @@ class Utils:
             if weather['date'] == target_day:
                 return weather
 
+    def lastday_lang8(self):
+        members = list()
+        one_day = datetime.timedelta(days=1)
+        today = datetime.datetime.today()
+        yesterday = today - one_day
+
+        marujirou = ('marujirou', 'http://lang-8.com/1269216/journals')
+        yoshio = ('yoshio', 'http://lang-8.com/1266645/journals')
+        sugar = ('sugar', 'http://lang-8.com/864499/journals')
+        headers = {'Accept-Language': 'ja'}
+        for name, url in [marujirou, yoshio, sugar]:
+            res = requests.get(url, headers=headers)
+            lastday = ''
+            flag = False
+            for line in res.text.split('\n'):
+                if line == "<span class='journal_date floated_on_left'>":
+                    flag = True
+                    continue
+                if flag:
+                    day = line.split()[0]
+                    lastday = datetime.datetime.strptime(day, '%Y年%m月%d日')
+                    flag = False
+                    # 昨日に投稿してる
+                    if yesterday.date() == lastday.date():
+                        break
+                    # 昨日よりも前ということは昨日投稿してない
+                    if yesterday > lastday:
+                        members.append(name)
+                        break
+        return members
+
     def is_today_lang8(self):
         url = 'http://lang-8.com/1269216/journals'
         headers = {'Accept-Language': 'ja'}

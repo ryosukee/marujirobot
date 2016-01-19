@@ -30,10 +30,20 @@ class DialogueAgent:
             '{}:{}%'.format(x['hour'], x['content']) for x in rainfall))
         return content
 
-    def lang8_text(self):
+    def lang8_reminder_text(self):
         text = ''
         if not self.__utils.is_today_lang8():
             text = '今日のlang8がまだ投稿されてないです！'
+        return text
+
+    def lang8_check_text(self):
+        members = self.__utils.lastday_lang8()
+        if len(members) == 0:
+            text = ''
+        elif len(members) == 3:
+            text = '昨日は全員がlang8に投稿し忘れました！'
+        else:
+            text = '昨日は{}がlang8に投稿し忘れました！'.format('と'.join(members))
         return text
 
     def generate_reply(self, text, method='markov'):
