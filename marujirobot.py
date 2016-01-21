@@ -72,11 +72,11 @@ with DataManager() as db:
     else:
         # リプライに対して返事をする
         for message, tweet_id, screen_name in agent.get_message():
-            if message == '--weather':
+            if message == '-weather':
                 weather(screen_name, tweet_id)
-            elif message == '--lang8-check':
+            elif message == '-lang8-check':
                 lang8check(screen_name, tweet_id)
-            elif message == '--lang8-reminder':
+            elif message == '-lang8-reminder':
                 lang8reminder(screen_name, tweet_id)
             else:
                 text = agent.generate_reply(message)
