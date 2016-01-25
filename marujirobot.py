@@ -50,11 +50,10 @@ def lang8reminder(screen_name='marujiruo', tweet_id=None):
 def lang8check(screen_name='marujiruo', tweet_id=None):
     # 昨日は誰が投稿忘れたか
     text = agent.lang8_check_text()
-    if text != '':
-        if tweet_id is None:
-            agent.speech('@{} {}'.format(screen_name, text), avoid_dupl='！')
-        else:
-            agent.speech(text, tweet_id, screen_name)
+    if tweet_id is None:
+        agent.speech('@{} {}'.format(screen_name, text), avoid_dupl='！')
+    else:
+        agent.speech(text, tweet_id, screen_name)
 
 
 with DataManager() as db:

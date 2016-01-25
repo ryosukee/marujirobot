@@ -40,8 +40,10 @@ class Utils:
         marujirou = ('marujirou', 'http://lang-8.com/1269216/journals')
         yoshio = ('yoshio', 'http://lang-8.com/1266645/journals')
         sugar = ('sugar', 'http://lang-8.com/864499/journals')
+        zawa = ('zawa', 'http://lang-8.com/1499341/journals')
+        mj = ('MJ', 'http://lang-8.com/1460051/journals')
         headers = {'Accept-Language': 'ja'}
-        for name, url in [marujirou, yoshio, sugar]:
+        for name, url in [marujirou, yoshio, sugar, zawa, mj]:
             res = requests.get(url, headers=headers)
             lastday = ''
             flag = False

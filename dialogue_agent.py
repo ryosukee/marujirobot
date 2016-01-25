@@ -39,7 +39,7 @@ class DialogueAgent:
     def lang8_check_text(self):
         members = self.__utils.lastday_lang8()
         if len(members) == 0:
-            text = ''
+            text = '昨日は全員がlang8に投稿しました。'
         elif len(members) == 3:
             text = '昨日は全員がlang8に投稿し忘れました！'
         else:
