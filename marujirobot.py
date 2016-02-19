@@ -66,6 +66,7 @@ with DataManager() as db:
         lang8reminder()
     elif args['--lang8-check']:
         lang8check()
+        lang8check('zawa9510')
     elif args['--tweet'] is not None:
         agent.speech(args['--tweet'])
     else:
