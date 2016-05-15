@@ -8,7 +8,7 @@ class DataManager:
         self.__file = './data.pkl'
         self.__data = dict()
         if not os.path.exists(self.__file):
-            keyf = 'keys.ini'
+            keyf = './keys.ini'
             config = ConfigParser()
             config.read(keyf)
             auth = [config['Key'][k] for k in ['CK', 'CS', 'AT', 'AS']]
