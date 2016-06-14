@@ -40,7 +40,7 @@ class DialogueAgent:
         members = self.__utils.lastday_lang8()
         if len(members) == 0:
             text = '昨日は全員がlang8に投稿しました。'
-        elif len(members) == 3:
+        elif len(members) == 5:
             text = '昨日は全員がlang8に投稿し忘れました！'
         else:
             text = '昨日は{}がlang8に投稿し忘れました！'.format('と'.join(members))
